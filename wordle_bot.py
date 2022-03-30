@@ -1,3 +1,4 @@
+from constants import Constants
 import json
 from random import randrange
 import re
@@ -9,7 +10,9 @@ words: dict = json.load(f)
 
 class Solver():
 
-    __actual = ''
+    __letters_not_in_word = []
+    __letters_in_word = []
+    __word = ''
     __test = Test()
 
     def __init__(self) -> None:
@@ -42,20 +45,18 @@ class Solver():
     def solve(self, regex):
         regex_words = self.return_words_regex(regex)
         rand = randrange(len(regex_words))
-        __actual = self.__test.try_attempt(regex_words[rand])
-        print(__actual)
+        colors = self.__test.try_attempt(regex_words[rand])
 
-        # Change to double return
         # Return an object with word like now, and with letters that are in the word but in other position
         # Save all the letters that aren't in the word, so we don't use them again
 
-        if __actual == 'LOST GAME':
+        if not colors:
             return
-        if '.' not in __actual:
-            print('FINISHED')
+        if Constants.GRAY not in colors and Constants.YELLOW not in colors:
+            print('SOLVED')
             return
         
-        self.solve(__actual)
+        self.solve('')
         
 
 solver = Solver()

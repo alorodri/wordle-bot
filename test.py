@@ -1,36 +1,50 @@
-
+from constants import Constants
 
 class Test():
     __word = 'PERRA'
     __attempt = 0
 
     def try_attempt(self, word):
+        colors = []
         if self.__attempt == 6:
-            return 'LOST GAME'
-
-        result = ''
+            return colors
 
         if self.__word[0] != word[0]:
-            result += '.'
+            if word[0] in self.__word:
+                colors.append(Constants.YELLOW)
+            else:
+                colors.append(Constants.GRAY)
         else:
-            result += word[0]
+            colors.append(Constants.GREEN)
         if self.__word[1] != word[1]:
-            result += '.'
+            if word[1] in self.__word:
+                colors.append(Constants.YELLOW)
+            else:
+                colors.append(Constants.GRAY)
         else:
-            result += word[1]
+            colors.append(Constants.GREEN)
         if self.__word[2] != word[2]:
-            result += '.'
+            if word[2] in self.__word:
+                colors.append(Constants.YELLOW)
+            else:
+                colors.append(Constants.GRAY)
         else:
-            result += word[2]
+            colors.append(Constants.GREEN)
         if self.__word[3] != word[3]:
-            result += '.'
+            if word[3] in self.__word:
+                colors.append(Constants.YELLOW)
+            else:
+                colors.append(Constants.GRAY)
         else:
-            result += word[3]
+            colors.append(Constants.GREEN)
         if self.__word[4] != word[4]:
-            result += '.'
+            if word[4] in self.__word:
+                colors.append(Constants.YELLOW)
+            else:
+                colors.append(Constants.GRAY)
         else:
-            result += word[4]
+            colors.append(Constants.GREEN)
 
         self.__attempt += 1
 
-        return result
+        return colors
