@@ -2,7 +2,6 @@ from constants import Constants
 import json
 import re
 from utils import MapUtils
-from words import PERCENTS
 
 from test import Test
 
