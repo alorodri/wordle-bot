@@ -1,13 +1,11 @@
 from constants import Constants
 
 class Test():
-    __word = 'PERRA'
+    __word = 'CAIDA'
     __attempt = 0
 
     def try_attempt(self, word):
         colors = []
-        if self.__attempt == 6:
-            return colors
 
         if self.__word[0] != word[0]:
             if word[0] in self.__word:
