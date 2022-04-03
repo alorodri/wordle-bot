@@ -80,17 +80,13 @@ class Solver():
         regex_words = list(filter(self.in_other_pos_filter, regex_words))
         if len(regex_words):
             regex_words.sort(reverse=True, key=lambda w: self.__word_scores[w])
-            found_common = False
 
+            word_attempt = regex_words[0]
             if USE_COMMONS:
                 for word in regex_words:
                     if word in common:
                         word_attempt = word
-                        found_common = True
                         break
-
-            if not found_common:
-                word_attempt = regex_words[0]
 
             colors = self.__explorer.attempt(word_attempt, self.__attempt)
 
