@@ -1,9 +1,12 @@
 from constants import Constants
 import json
 import re
+from explorer import Explorer
 from utils import MapUtils
 
 from test import Test
+
+USE_COMMONS = True
 
 f = open('words.txt', 'r', encoding='utf8')
 words: dict = json.load(f)
@@ -13,17 +16,25 @@ f = open('words_stats.txt', 'r', encoding='utf8')
 stats: dict = json.load(f)
 f.close()
 
+f = open('common_words.txt', 'r', encoding='utf8')
+common: list = json.load(f)
+f.close()
+
 class Solver():
 
     __letters_not_in_word = []
     __letters_in_other_pos = {}
-    __test = Test()
     __word_scores = {}
+    __attempt = 1
+    __explorer = None
 
     def __init__(self) -> None:      
         f = open('word_points.txt', 'r', encoding='utf8')
         self.__word_scores = json.load(f)
         f.close()
+                
+        self.__explorer = Explorer()
+        self.__explorer.navigate()
 
     def return_words_containing(self, letters):
         result = []
@@ -69,12 +80,22 @@ class Solver():
         regex_words = list(filter(self.in_other_pos_filter, regex_words))
         if len(regex_words):
             regex_words.sort(reverse=True, key=lambda w: self.__word_scores[w])
-            word_attempt = regex_words[0]
-            colors = self.__test.try_attempt(word_attempt)
-            print(f'Trying with word {word_attempt}')
+            found_common = False
+
+            if USE_COMMONS:
+                for word in regex_words:
+                    if word in common:
+                        word_attempt = word
+                        found_common = True
+                        break
+
+            if not found_common:
+                word_attempt = regex_words[0]
+
+            colors = self.__explorer.attempt(word_attempt, self.__attempt)
 
             if colors.count(Constants.GREEN) == 5:
-                print('GAME WON')
+                print(f'Game ended, word was "{word_attempt}"')
                 return
 
             for idx, color in enumerate(colors):
@@ -85,8 +106,8 @@ class Solver():
                 else:
                     self.__letters_not_in_word.append(word_attempt[idx])
 
+        self.__attempt += 1
         self.solve(regex)
-                
-        
+
 solver = Solver()
 solver.solve('.....')

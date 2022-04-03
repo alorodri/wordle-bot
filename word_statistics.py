@@ -40,7 +40,7 @@ for word_list in all_words.values():
             points += letters_percents[letter + '_all']
             points += letters_percents[letter + '_' + str(idx+1)]
             if letter not in existing_letters:
-                points += 5
+                points += 10
             existing_letters.append(letter)
 
         word_points[word] = points
