@@ -100,7 +100,12 @@ class Solver():
                 elif color == Constants.YELLOW:
                     MapUtils.add_to_mapvalue_list(self.__letters_in_other_pos, word_attempt[idx], idx)
                 else:
-                    self.__letters_not_in_word.append(word_attempt[idx])
+                    if word_attempt[idx] not in self.__letters_in_other_pos:
+                        # bug del wordle, en el que si intentas la letra varias veces y no aciertas la posición
+                        # exacta en ninguna, te sale la primera como amarilla y las siguientes como ausente
+                        self.__letters_not_in_word.append(word_attempt[idx])
+                    else:
+                        MapUtils.add_to_mapvalue_list(self.__letters_in_other_pos, word_attempt[idx], idx)
 
         self.__attempt += 1
         self.solve(regex)
