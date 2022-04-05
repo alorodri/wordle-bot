@@ -37,7 +37,7 @@ class Explorer():
         cards = cards_row.find_elements_by_xpath('div/div/div[2]/div')
         colors = []
         for card in cards:
-            card_class = card.get_attribute('class')
+            card_class = card.get_attribute('class').strip()
             bg = card_class.split(' ')[-1]
             if bg == 'bg-correct':
                 colors.append(Constants.GREEN)
