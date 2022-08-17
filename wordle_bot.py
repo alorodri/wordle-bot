@@ -67,12 +67,15 @@ class Solver():
         return True
 
     def in_other_pos_filter(self, word):
+        if not self.__letters_in_other_pos:
+            return True        
+
         for idx, letter in enumerate(word):
-            filter = MapUtils.check_is_in_map_list(self.__letters_in_other_pos, letter, idx)
-            if filter:
-                return False
+            found = MapUtils.check_in_map_list_yellow(self.__letters_in_other_pos, letter, idx)
+            if found:
+                return True
         
-        return True
+        return False
 
     def solve(self, regex):
         regex_words = self.return_words_regex(regex)
@@ -90,8 +93,9 @@ class Solver():
 
             colors = self.__explorer.attempt(word_attempt, self.__attempt)
 
-            if colors.count(Constants.GREEN) == 5:
-                print(f'Game ended, word was "{word_attempt}"')
+            if len(colors) == 0:
+                # check better way to get if it's solved or not
+                print(f'Game ended')
                 return
 
             for idx, color in enumerate(colors):
@@ -100,10 +104,12 @@ class Solver():
                 elif color == Constants.YELLOW:
                     MapUtils.add_to_mapvalue_list(self.__letters_in_other_pos, word_attempt[idx], idx)
                 else:
-                    if word_attempt[idx] not in self.__letters_in_other_pos:
+                    if word_attempt[idx] not in self.__letters_in_other_pos and word_attempt[idx] not in regex:
                         # bug del wordle, en el que si intentas la letra varias veces y no aciertas la posición
                         # exacta en ninguna, te sale la primera como amarilla y las siguientes como ausente
                         self.__letters_not_in_word.append(word_attempt[idx])
+                    elif word_attempt[idx] in regex:
+                        pass
                     else:
                         MapUtils.add_to_mapvalue_list(self.__letters_in_other_pos, word_attempt[idx], idx)
 

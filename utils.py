@@ -1,12 +1,12 @@
 class MapUtils():
-    
+
     @staticmethod
-    def check_is_in_map_list(m, k, v):
-        if k not in m.keys():
+    def check_in_map_list_yellow(m, k, v):
+        if k in m and v in m[k]:
             return False
-        elif v not in m[k]:
-            return False
-        return True
+        elif k in m.keys():
+            return True
+        return False
 
     @staticmethod
     def add_to_mapvalue_list(m, k, v):
