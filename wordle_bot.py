@@ -7,6 +7,7 @@ from utils import MapUtils
 from test import Test
 
 USE_COMMONS = True
+TESTING = False
 
 f = open('words.txt', 'r', encoding='utf8')
 words: dict = json.load(f)
@@ -27,27 +28,16 @@ class Solver():
     __word_scores = {}
     __attempt = 1
     __explorer = None
+    __test = Test()
 
     def __init__(self) -> None:      
         f = open('word_points.txt', 'r', encoding='utf8')
         self.__word_scores = json.load(f)
         f.close()
                 
-        self.__explorer = Explorer()
-        self.__explorer.navigate()
-
-    def return_words_containing(self, letters):
-        result = []
-        for key in words:
-            for word in words[key]:
-                matches = 0
-                for letter in letters:
-                    if letter in word:
-                        matches += 1
-                if matches == len(letters):
-                        result.append(word)
-
-        return result
+        if not TESTING:
+            self.__explorer = Explorer()
+            self.__explorer.navigate()
 
     def return_words_regex(self, regex):
         result = []
@@ -70,12 +60,22 @@ class Solver():
         if not self.__letters_in_other_pos:
             return True        
 
+        has_yellow_letter = False
         for idx, letter in enumerate(word):
             found = MapUtils.check_in_map_list_yellow(self.__letters_in_other_pos, letter, idx)
-            if found:
-                return True
+            if not found:
+                return found
+            elif found != -1:
+                has_yellow_letter = True
         
-        return False
+        return has_yellow_letter
+
+    def is_solved(self, colors):
+        count = 0
+        for color in colors:
+            if color == 2:
+                count += 1
+        return count == 5
 
     def solve(self, regex):
         regex_words = self.return_words_regex(regex)
@@ -90,12 +90,15 @@ class Solver():
                     if word in common:
                         word_attempt = word
                         break
+            
+            if TESTING:
+                colors = self.__test.try_attempt(word_attempt)
+                print(f'Trying {word_attempt}')
+            else:
+                colors = self.__explorer.attempt(word_attempt, self.__attempt)
 
-            colors = self.__explorer.attempt(word_attempt, self.__attempt)
-
-            if len(colors) == 0:
-                # check better way to get if it's solved or not
-                print(f'Game ended')
+            if len(colors) == 0 or self.is_solved(colors):
+                print(f'Game ended, word was {word_attempt} and was solved in {self.__attempt} attempts')
                 return
 
             for idx, color in enumerate(colors):

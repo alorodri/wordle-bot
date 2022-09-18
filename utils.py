@@ -6,7 +6,7 @@ class MapUtils():
             return False
         elif k in m.keys():
             return True
-        return False
+        return -1
 
     @staticmethod
     def add_to_mapvalue_list(m, k, v):

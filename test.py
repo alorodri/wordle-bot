@@ -1,7 +1,7 @@
 from constants import Constants
 
 class Test():
-    __word = 'ALBUM'
+    __word = 'DIGNO'
     __attempt = 0
 
     def try_attempt(self, word):
